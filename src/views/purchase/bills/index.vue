@@ -81,7 +81,7 @@
       <el-table-column prop="efc_nrp">
         <template slot="header" >
           <div class="table-header">
-            <span>Tanggal Jatuh Tempo10</span><br>
+            <span>Tanggal Jatuh Tempo11</span><br>
             <span style="font-weight: normal">Tanggal Pembelian</span>
           </div>
         </template>
