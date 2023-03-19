@@ -3,7 +3,7 @@
     <!-- HEADER -->
     <div class="title-container">
       <el-col :span="12">
-        <h1 class="page-title">Pembelian4</h1>
+        <h1 class="page-title">Pembelian5</h1>
       </el-col>
       <el-col :span="12" style="text-align: right;">
         <el-tooltip content="Create Pembelian Baru" placement="top">
