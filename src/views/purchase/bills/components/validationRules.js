@@ -14,4 +14,7 @@ export default {
     bill_order_number: [
         { required: true, trigger: 'blur', message: 'Please enter Nomor Pembelian' }
     ],
+    bill_type: [
+        { required: true, trigger: 'blur', message: 'Please choose Bill Type' }
+    ],
 }

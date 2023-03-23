@@ -82,6 +82,17 @@
                       <el-input ref="bill_shipping_cost" v-model="billingListForm.bill_shipping_cost" placeholder="Masukkan Ongkos Kirim" clearable />
                     </el-form-item>
                   </el-col>
+                  <el-col :span="12">
+                    <el-form-item label="Tipe Pembelian" class="filter-form-item input-small" prop="bill_type">
+                      <el-select ref="bill_type" v-model="billingListForm.bill_type" placeholder="Bill Type" filterable clearable value-key="bill_type">
+                        <el-option v-for="d, index in billType"
+                                  :key="index"
+                                  :label="d"
+                                  :value="d"
+                        />
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
                 </el-row>
               </el-col>
             </el-row>
@@ -232,6 +243,7 @@ export default {
       itemList: [],
       formItemList: [],
       bankList: [],
+      billType: ["raw","operational"],
 
       // form var
       billingListForm: {
@@ -251,6 +263,7 @@ export default {
         bill_ppn: 0,
         bill_bank_code: '',
         bill_account_number: '',
+        bill_type: ''
       },
       selectedSupplier: [],
 
@@ -372,25 +385,8 @@ export default {
 
     getItemList(id) {
       getItemBySuppId(id).then(response => {
-        // console.log('response.data', response.data);
         this.itemList = response.data
       }).catch(() => {})
-      // this.supplierList = [
-      //   {
-      //     item_id: 1,
-      //     item_name: 'Pulpen',
-      //     item_description: 'Mantab dah pokoknya',
-      //     item_sell_price: 10000,
-      //     item_purchase_price: 9000
-      //   },
-      //   {
-      //     item_id: 2,
-      //     item_name: 'Buku',
-      //     item_description: 'Mantab dah pokoknya',
-      //     item_sell_price: 2000,
-      //     item_purchase_price: 1500
-      //   }
-      // ]
     },
     removeItem(index) {
 	    this.formItemList.splice(index, 1)
@@ -415,7 +411,6 @@ export default {
       this.$refs.billingListForm.validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.billingListForm)
-          tempData.bill_type = 'vendor'
           tempData.bill_shipping_cost = parseInt(tempData.bill_shipping_cost)
           tempData.bill_start_date = moment(tempData.bill_start_date).format('YYYY-MM-DD HH:mm:ss')
           tempData.bill_due_date = moment(tempData.bill_due_date).format('YYYY-MM-DD HH:mm:ss')

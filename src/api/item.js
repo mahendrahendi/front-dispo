@@ -29,3 +29,11 @@ export function postItem(data) {
     data
   })
 }
+
+export function putItem(data, id) {
+  return request({
+    url: '/item/' + id,
+    method: 'put',
+    data
+  })
+}

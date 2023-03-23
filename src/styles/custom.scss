@@ -7,6 +7,7 @@ $--color-info: #dce2f9;
 $--color-secondary: #668EAB;
 $--color-white: #d6d6f2;
 $--color-dark: #0E436B;
+$--color-nav-wrap: #dce2f9;
 $--color-background: #fcfcfc;
 $--color-background-row: #ffffff;
 $--color-hover: #F2F4FC;
@@ -955,7 +956,8 @@ input[type="file"] {
   }
 
   &__nav-wrap::after {
-    background-color: $--color-dark;
+    background-color: $--color-nav-wrap;
+    height: 1px;
   }
 }
 

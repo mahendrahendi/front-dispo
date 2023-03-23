@@ -321,6 +321,7 @@
                 type: 'success',
                 duration: 2000
               })
+              this.$router.go(-1)
               // this.cancelForm()
             }).catch((err) => {
               console.log("err", err);

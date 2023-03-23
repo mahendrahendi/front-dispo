@@ -17,7 +17,7 @@
 
     <div class="title-container" align="center">
       <el-col :span="24">
-        <h1 class="page-title">Rp{{ billHeader.bill_draft | toThousandFilter }}</h1>
+        <h1 class="page-title">Rp{{ balanceHeader | toThousandFilter }}</h1>
         <h1 class="page-subtitle">Saldo</h1>
       </el-col>
     </div>
@@ -153,13 +153,13 @@ import { MessageBox } from 'element-ui'
 import { getEnforcerList, postEnforcer, putEnforcer, putEnforcerPassword, deleteEnforcer } from '@/api/enforcer-account'
 import { getBillList, getBillHeader, changeBillStatus, deleteBill } from '@/api/bill'
 import { getRoleList } from '@/api/role-management'
+import { getBalance } from '@/api/balance'
 import CryptoJS from 'crypto-js'
 
 export default {
   components: { Pagination },
   filters: {
     statusFilter(status) {
-      console.log('status: ', status);
       const statusMap = {
         'SUDAH DIBAYAR': 'success',
         'MENUNGGU PEMBAYARAN': 'warning',
@@ -190,7 +190,7 @@ export default {
       listLoading: true,
       total: 0,
       dataList: [],
-      billHeader: [],
+      balanceHeader: 0,
 
       // dropdown var
       statusList: ['MENUNGGU PEMBAYARAN', 'SUDAH DIBAYAR'],
@@ -227,8 +227,8 @@ export default {
     getHeader() {
       this.listLoading = true
 
-      getBillHeader().then(response => {
-        this.billHeader = response.data
+      getBalance().then(response => {
+        this.balanceHeader = response.data.net_amount
         this.listLoading = false
       }).catch(() => {
         this.listLoading = false

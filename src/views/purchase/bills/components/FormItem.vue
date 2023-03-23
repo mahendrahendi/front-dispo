@@ -47,10 +47,8 @@
         <el-form-item class="filter-form-item input-small" prop="item_purchase_price">
           <el-input 
             ref="item_purchase_price" 
-            v-model="list.item_purchase_price" 
+            v-model="list.item_purchase_price"
             placeholder="Harga Beli"
-            :formatter="(value) => `Rp ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-            :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
             @input="emitInput" 
           />
         </el-form-item>
@@ -85,7 +83,7 @@
   
 <script>
   import { getItemBySuppId } from '@/api/supplier'
-  import { toThousandFilter, moneyMask} from '@/filters'
+  import { toThousandFilter} from '@/filters'
 
   export default {
     name: 'FormItem',
@@ -174,9 +172,11 @@
           this.list.item_purchase_price = this.itemListSelectedTemp.item_purchase_price
           this.list.item_discount = this.itemListSelectedTemp.item_discount ? this.itemListSelectedTemp.item_discount : 0
           this.list.item_ppn = this.itemListSelectedTemp.item_ppn ? this.itemListSelectedTemp.item_ppn : 0
+
           let count_qty = parseInt(this.itemListSelectedTemp.item_purchase_price) * 1
           let count_discount = count_qty - (count_qty * (parseInt(this.itemListSelectedTemp.item_discount) / 100))
           let total = count_discount + (count_discount * (parseInt(this.itemListSelectedTemp.item_ppn) / 100))
+
           this.list.item_total_price = total
           this.list.item_status = 'ready'
           this.isDisabled = true
@@ -198,21 +198,23 @@
 
       'list.item_qty'() {
         let wholePrice = this.list.item_wholesalers
-
-        wholePrice.sort((a, b) => {
-          if (a.wholesaler_qty < b.wholesaler_qty) {
-            return -1;
-          }
-          if (a.wholesaler_qty > b.wholesaler_qty) {
-            return 1;
-          }
-          return 0;
-        });
-
         
-        if (wholePrice.length > 0) {
+        if (wholePrice != null) {
+          wholePrice.sort((a, b) => {
+            if (a.wholesaler_qty < b.wholesaler_qty) {
+              return -1;
+            }
+            if (a.wholesaler_qty > b.wholesaler_qty) {
+              return 1;
+            }
+            return 0;
+          });
+
+          console.log('wholePrice: ', wholePrice);
           wholePrice.map((d, i) => {
-            
+            console.log("d.wholesaler_qty: ", d.wholesaler_qty);
+            console.log("this.list.item_qty: ", this.list.item_qty);
+            console.log("d: ", d);
             if (this.list.item_qty >= d.wholesaler_qty) {
               this.list.item_purchase_price = d.wholesaler_price
             } else if (i == 0 && this.list.item_qty < d.wholesaler_qty) {
@@ -222,11 +224,6 @@
           })
         }
       },
-
-      'list.item_purchase_price'(){
-        console.log('MASUK', this.list.item_purchase_price);
-        this.list.item_purchase_price = moneyMask(this.list.item_purchase_price)
-      }
     },
 
     created() {
@@ -257,6 +254,8 @@
         let count_ppn = count_discount + (count_discount * (parseInt(this.list.item_ppn) / 100))
         let total = count_ppn
         this.list.item_total_price = total || 0
+        console.log('this.list: ', this.list);
+
         this.$emit('input', {
           item_id: this.list.item_id,
           item_key: this.item_key,

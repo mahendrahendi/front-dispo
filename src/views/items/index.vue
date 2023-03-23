@@ -123,7 +123,7 @@
           <span>{{ row.item_description }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Harga Beli" prop="efc_username">
+      <el-table-column label="Harga Beli Satuan" prop="efc_username">
         <template slot-scope="{row}">
           <span>{{ row.item_purchase_price | toThousandFilter }}</span>
         </template>
@@ -306,7 +306,8 @@ export default {
           supplier_id: this.supplier_id
         },
         params: {
-          item_data: row
+          item_data: row,
+          isEdit: true
         }
       })
     },

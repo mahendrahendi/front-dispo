@@ -154,7 +154,6 @@ export default {
   components: { Pagination },
   filters: {
     statusFilter(status) {
-      console.log('status: ', status);
       const statusMap = {
         'SUDAH DIBAYAR': 'success',
         'MENUNGGU PEMBAYARAN': 'warning',

@@ -46,12 +46,16 @@
                   </el-col>
                 </el-row> -->
                 <el-row v-if="isSupplierListSelected">
-                  <form-item @input="handleInput"/>
+                  <form-item
+                    @input="handleInput"
+                    :item_data="inputForm"
+                  />
                 </el-row>
               </div>
               <el-row style="text-align: right; margin-top: 25px; padding-bottom: 50px">
                 <el-button @click="$router.go(-1)" type="info" round>Batal</el-button>
-                <el-button style="margin-right: 25px" type="success" round @click="createItem">Simpan</el-button>
+                <el-button v-if="!isEdit" style="margin-right: 25px" type="success" round @click=" createItem">Simpan</el-button>
+                <el-button v-else style="margin-right: 25px" type="success" round @click=" updateItem">Update</el-button>
               </el-row>
             </el-form>
         </el-col>
@@ -71,7 +75,7 @@
   import FormItem from './components/FormItem.vue'
   import { validNumeric, validPassword, validUsername, validAlphabets } from '@/utils/validate'
   import { MessageBox } from 'element-ui'
-  import { postItem } from '@/api/item'
+  import { postItem, putItem } from '@/api/item'
   import CryptoJS from 'crypto-js'
   
   export default {
@@ -79,6 +83,9 @@
     props: {
       item_data: {
         type: Object
+      },
+      isEdit: {
+        type: Boolean
       }
     },
     data() {
@@ -127,7 +134,9 @@
     },
 
     created(){
-      this.editData()
+      if (this.item_data) {
+        this.editData()
+      }
     },
 
     methods: {
@@ -143,14 +152,19 @@
       editData(){
         const item = this.item_data
         this.inputForm.item_name = item.item_name
-        console.log('item_data: ', this.item_data);
+        this.inputForm.item_description = item.item_description
+        this.inputForm.item_purchase_price = item.item_purchase_price;
+        this.inputForm.item_sell_price = item.item_sell_price;
+        this.inputForm.item_unit = item.item_unit;
+        this.inputForm.item_wholesalers = item.wholesalers;
+        console.log('item_data: ', item);
       },
   
       // button action
       createItem() {
-        // return console.log('inputForm: ', Object.assign({}, this.inputForm));
         this.$refs.inputForm.validate((valid) => {
           if (valid) {
+            console.log('inputForm: ', Object.assign({}, this.inputForm));
             const tempData = Object.assign({}, this.inputForm)
 
             let map_wholesalers_item = []
@@ -175,6 +189,45 @@
               this.$notify({
                 title: 'Error',
                 message: 'Gagal tambah barang..',
+                type: 'error',
+                duration: 2000
+              })
+            })
+          }
+        })
+      },
+
+      // button action
+      updateItem() {
+        this.$refs.inputForm.validate((valid) => {
+          if (valid) {
+            console.log('inputForm: ', Object.assign({}, this.inputForm));
+            const tempData = Object.assign({}, this.inputForm)
+
+            let map_wholesalers_item = []
+            tempData.item_wholesalers.map((d, i) => {
+              map_wholesalers_item.push({
+                wholesaler_price: parseInt(d.wholesaler_price),
+                wholesaler_qty: parseInt(d.wholesaler_qty)
+              })
+            })
+
+            tempData.item_wholesalers = map_wholesalers_item
+
+            return console.log("tempData", tempData);
+            
+            putItem(tempData, this.item_data.item_id).then((response) => {
+              this.$notify({
+                title: 'Success',
+                message: 'Berhasil update barang..',
+                type: 'success',
+                duration: 2000
+              })
+              this.$router.go(-1)
+            }).catch((err) => {
+              this.$notify({
+                title: 'Error',
+                message: 'Gagal update barang..',
                 type: 'error',
                 duration: 2000
               })

@@ -89,18 +89,26 @@ import { v4 as uuid } from 'uuid';
 
 export default {
     name: 'FormItem',
+    props: {
+      item_data: {
+        type: Object
+      }
+    },
     data() {
         return {
             unitList: ['Pcs','Liter','Milliliter'],
 
-            item_name: "",
-            item_description: "",
-            item_unit_type: "",
-            item_unit_price: "",
-            item_sell_price: "",
+            item_name: this.item_data.item_name,
+            item_description: this.item_data.item_description,
+            item_unit_type: this.item_data.item_unit,
+            item_unit_price: this.item_data.item_purchase_price,
+            item_sell_price: this.item_data.item_sell_price,
 
-            wholesalerPrice: []
+            wholesalerPrice: this.item_data.item_wholesalers ? this.item_data.item_wholesalers : []
         }
+    },
+    created() {
+        console.log('item_datassss', this.item_data);
     },
     computed: {
         isWholesalerPrice() {
@@ -113,6 +121,7 @@ export default {
     },
     methods: {
         emitInput() {
+            console.log('item_unit_type: ', this.item_unit_type);
             this.$emit('input', {
                 item_name: this.item_name,
                 item_description: this.item_description,
